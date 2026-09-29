@@ -1,0 +1,38 @@
+# Render.com orqali 24/7 ishga tushirish uchun fayl.
+# Render dashboard orqali "New" > "Blueprint" da tanlang.
+
+services:
+  - type: web
+    name: ksbot
+    runtime: docker
+    plan: starter # bepul "free" reja bot uchun ishlamaydi (1 daqiqada to'xtiriladi)
+    region: frankfurt # yoki oregon
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: / # bot HTTP server emas, shuning uchun tekshiruvsiz
+    envVars:
+      - key: BOT_TOKEN
+        sync: false # Render dashboard'ga qo'lda kiritiladi
+      - key: ADMIN_IDS
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: ADMIN_PHONE
+        sync: false
+      - key: COURSE_NAME
+        value: Kompyuter savodxonligi kursi
+      - key: COURSE_PRICE
+        value: "100.000 so'm"
+      - key: DIRECTION_EXAMPLE
+        value: Tarix - B guruh
+      - key: TIME_SLOTS
+        value: "10:00, 11:00, 12:00, 13:00, 14:00, 15:00, 16:00, 17:00, 18:00, 19:00"
+      - key: DB_FILE
+        value: /app/data/bot.db
+
+    # --- DOIMIY DISK (majburiy!) ---
+    # Render'ning bepul rejasida disk yo'q: container qayta ishga tushsa,
+    # barcha ro'yxatlar yo'qoladi. Disk pul to'lovli rejada mavjud.
+    disk:
+      name: ksbot-data
+      mountPath: /app/data
+      sizeGB: 1

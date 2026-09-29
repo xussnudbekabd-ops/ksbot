@@ -110,3 +110,13 @@ export function getStats() {
 }
 
 export default db;
+
+/** Jarayon yopilayotganda ma'lumotlarni to'liq saqlash (server uchun muhim). */
+export function closeDb() {
+  try {
+    db.pragma('wal_checkpoint(TRUNCATE)');
+    db.close();
+  } catch {
+    /* allaqachon yopilgan bo'lishi mumkin */
+  }
+}

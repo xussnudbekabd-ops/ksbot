@@ -96,6 +96,67 @@ PDF yaratilishda xatolik bo'lsa, bot avtomatik ravishda bir xil ro'yxatni Word f
 | `comment` | ixtiyoriy izoh |
 | `created_at` | ro'yxatdan o'tgan vaqt |
 
+## Serverga o'tkazish (24/7 ishlash uchun)
+
+### 1. Bepul server (Oracle Cloud Always Free)
+
+Eng arzon va barqaror yo'l — Oracle Cloud'da **doimiy bepul** VPS (2 CPU, 12 GB RAM, 200 GB disk).
+[oracle.com/cloud/free](https://www.oracle.com/cloud/free/) dan ro'yxatdan o'ting →
+**Create VM Instance** → image: *Ubuntu 22.04* → **Always Free-eligible** yozuvi bo'lgan shaklni tanlang.
+
+Keyin serverga SSH bilan kirib, bitta buyrumni bajaring:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/xussnudbekabd-ops/ksbot/main/deploy/install.sh | sudo bash
+```
+
+Skript Node.js 22, shriftlar, kod, bog'liqliklar va `ksbot` systemd xizmatini o'rnatadi.
+
+### 2. Sozlash
+
+```bash
+nano /opt/ksbot/.env
+```
+
+| O'zgaruvchi | Qiymat |
+| --- | --- |
+| `BOT_TOKEN` | @BotFather dan olingan **yangi** token |
+| `ADMIN_IDS` | `6021668919` |
+| `ADMIN_PASSWORD` | kuchli parol |
+| `ADMIN_PHONE` | `+998 93 174 16 08` |
+
+### 3. Ishga tushirish va kuzatish
+
+```bash
+systemctl start ksbot      # ishga tushirish
+systemctl status ksbot     # holati
+systemctl stop ksbot       # to'xtatish
+systemctl restart ksbot    # qayta ishga tushirish
+journalctl -u ksbot -f     # jonli loglar
+```
+
+Xizmat `Restart=always` bilan sozlangan — server qayta ishga tushsa yoki bot xato bilan
+to'xtasa, o'zi avtomatik qayta ishga tushadi.
+
+**Zaxira nusxa (muhim!):**
+
+```bash
+# ro'yxatlar bazasini yuklab olish
+scp sizning-server:/var/lib/ksbot/bot.db ./bot-backup.db
+```
+
+### Render.com (to'lovli reja)
+
+`render.yaml` va `Dockerfile` tayyor. Render bepul reja **bot uchun ishlamaydi**:
+15 daqiqa faollikdan keyin xizmat o'chadi, qayta ishga tushishi 1 daqiqa oladi va SQLite
+fayli har deploy'da yo'qoladi (doimiy disk faqat to'lovli rejada bor — `starter`, ~$7/oy).
+
+### Nima uchun SQLite fayli alohida joyda?
+
+Serverda baza `/opt/ksbot/data/` emas, **`/var/lib/ksbot/bot.db`** da saqlanadi — kod yangilanishi
+(`git pull`) yoki `npm ci` da o'quvchi ma'lumotlari o'chmaydi. `systemd` fayli `SIGTERM` signalini
+kutadi, bot avval pollingni to'xtatadi, keyin bazani yopadi — ma'lumotlar to'liq saqlanadi.
+
 ## Tuzilma
 
 ```
@@ -111,6 +172,10 @@ src/
   helpers.js    yordamchi funksiyalar
   handlers/     start, registration, admin
   keyboards/    tugmalar
+
+deploy/
+  ksbot.service   systemd xizmati (24/7 ishlash uchun)
+  install.sh      serverga bir buyruq bilan o'rnatish
 ```
 
 ## Test

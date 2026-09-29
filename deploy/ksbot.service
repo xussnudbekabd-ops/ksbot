@@ -1,0 +1,48 @@
+[Unit]
+# Telegram ro'yxat boti — systemd xizmati
+Description=Telegram royxat boti (kompyuter savodxonligi kursi)
+Documentation=https://github.com/xussnudbekabd-ops/ksbot
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+
+# Kod joylashuvi
+WorkingDirectory=/opt/ksbot
+
+# .env faylidan o'qiydi (BOT_TOKEN, ADMIN_IDS, ADMIN_PASSWORD ...)
+EnvironmentFile=/opt/ksbot/.env
+Environment=NODE_ENV=production
+Environment=DB_FILE=/var/lib/ksbot/bot.db
+Environment=PDF_FONT=
+
+# Node o'zgaruvchilari
+ExecStart=/usr/bin/node src/index.js
+
+# To'xtatish uchun vaqt (SIGTERM yuboriladi, bazani saqlab yopadi)
+KillSignal=SIGTERM
+TimeoutStopSec=30
+
+# Avto qayta ishga tushish
+Restart=always
+RestartSec=10
+StartLimitBurst=5
+StartLimitIntervalSec=60
+
+# Xavfsizlik
+User=ksbot
+Group=ksbot
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/ksbot
+
+# Loglar
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=ksbot
+
+[Install]
+WantedBy=multi-user.target

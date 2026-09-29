@@ -1,0 +1,13 @@
+node_modules
+data
+tmp
+test-report.pdf
+test-report.docx
+*.log
+*.db-wal
+*.db-shm
+.env
+.git
+.gitattributes
+.gitignore
+README.md
