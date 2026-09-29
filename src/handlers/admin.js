@@ -10,8 +10,6 @@ import {
   getStats,
   searchRegistrations,
 } from '../db.js';
-import { buildRegistrationsPdf } from '../pdf.js';
-import { buildRegistrationsDocx } from '../docx.js';
 import { adminMenuKeyboard } from '../keyboards/admin.js';
 
 const store = createStore();
@@ -88,8 +86,18 @@ async function showMenu(ctx) {
 
 const fileName = (ext) => `registr-list-${new Date().toISOString().slice(0, 10)}.${ext}`;
 
+/**
+ * pdfkit va docx modullari faqat admin ro'yxat so'raganda yuklanadi —
+ * bu bot ishga tushish vaqtini ~0.6 soniya qisqartiradi.
+ */
+let pdfModule;
+let docxModule;
+const loadPdf = () => (pdfModule ??= import('../pdf.js'));
+const loadDocx = () => (docxModule ??= import('../docx.js'));
+
 async function sendPdf(ctx) {
   const rows = getAllRegistrations();
+  const { buildRegistrationsPdf } = await loadPdf();
   const buffer = await buildRegistrationsPdf(rows);
   await ctx.replyWithDocument(
     { document: buffer, filename: fileName('pdf') },
@@ -102,6 +110,7 @@ async function sendPdf(ctx) {
 
 async function sendDocx(ctx) {
   const rows = getAllRegistrations();
+  const { buildRegistrationsDocx } = await loadDocx();
   const buffer = await buildRegistrationsDocx(rows);
   await ctx.replyWithDocument(
     { document: buffer, filename: fileName('docx') },

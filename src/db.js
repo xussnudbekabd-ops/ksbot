@@ -7,7 +7,12 @@ fs.mkdirSync(path.dirname(path.resolve(config.dbFile)), { recursive: true });
 
 const db = new Database(config.dbFile);
 
+/* Tezlik uchun sozlamalar: WAL + NORMAL yozish + xotira keshi */
 db.pragma('journal_mode = WAL');
+db.pragma('synchronous = NORMAL');
+db.pragma('cache_size = -8000');
+db.pragma('temp_store = MEMORY');
+db.pragma('mmap_size = 268435456');
 
 db.exec(`
   CREATE TABLE IF NOT EXISTS registrations (

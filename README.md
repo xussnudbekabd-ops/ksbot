@@ -123,9 +123,18 @@ node tmp/test-flow.js        # to'liq oqimlar (17 ta tekshiruv)
 node tmp/test-pdf.js         # namuna PDF
 node tmp/test-docx.js        # namuna DOCX + node tmp/check-docx.js (ichini tekshirish)
 node tmp/clean-db.js         # bazani tozalash
-node tmp/test-start.js       # botni 12 sekund ishga tushirib tekshirish
+node tmp/test-start.js       # botni ishga tushirib tayyor bo'lish vaqtini o'lchash
+node tmp/bench.js            # modullar yuklanish tezligi
 node tmp/live-test.js        # PDF va DOCX ni haqiqiy Telegram'ga yuborish
 ```
+
+## Tezlik
+
+- `pdfkit` va `docx` modullari faqat admin ro'yxat so'raganda yuklanadi (`import()` orqali),
+  shuning uchun bot ishga tushishi tez — o'lchilgan **~0.5–0.8 s** (server javobgarligidan).
+- SQLite uchun `WAL`, `synchronous = NORMAL`, 8 MB xotira keshi va `mmap_size` yoqilgan.
+- Holatlar (FSM) saqlanadigan `Map` eskirgan yozuvlarni avtomatik tozalaydi (6 soat TTL,
+  ko'pi bilan 10 000 yozuv), shunda uzoq ishlagan bot xotira yo'qotmaydi.
 
 ## Xavfsizlik
 
