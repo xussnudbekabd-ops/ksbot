@@ -1,0 +1,19 @@
+node_modules/
+
+# Ma'lumotlar bazasi: faqat bo'sh bot.db joylanadi (registratsiyalar yo'q holatda)
+# SQLite yordamchi fayllari hech qachon joylanmaydi
+data/*
+!data/bot.db
+
+# Maxfiy sozlamalar (bot tokeni) — HECH QACHON joylamang
+.env
+.env.local
+
+# Vaqtinchalik natijalar
+*.log
+*.pdf
+*.docx
+*.xlsx
+
+.DS_Store
+Thumbs.db

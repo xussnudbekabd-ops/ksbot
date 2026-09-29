@@ -1,0 +1,8 @@
+# Matn fayllari bir xil qator tugunida saqlansin (Windows/Linux o'rtasida farq bo'lmasin)
+* text=auto eol=lf
+
+# Windows skriptlari uchun CRLF
+*.bat text eol=crlf
+
+# Ma'lumotlar bazasi ikki fayl emas
+*.db binary

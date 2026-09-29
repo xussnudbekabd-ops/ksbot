@@ -1,0 +1,24 @@
+{
+  "name": "ksbot",
+  "version": "1.0.0",
+  "description": "Kompyuter savodxonligi kursi uchun Telegram ro'yxat boti: so'rovnoma, admin panel, PDF va Word ro'yxat",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
+  },
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "dependencies": {
+    "better-sqlite3": "^12.4.1",
+    "docx": "^9.8.0",
+    "dotenv": "^17.2.3",
+    "grammy": "^1.38.0",
+    "pdfkit": "^0.17.2"
+  },
+  "devDependencies": {
+    "jszip": "^3.10.2"
+  }
+}
